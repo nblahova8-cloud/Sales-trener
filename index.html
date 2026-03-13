@@ -812,6 +812,39 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </nav>
 
 <script>
+const TRENERI = {
+  pepa: {
+    name: 'Pepa',
+    emoji: '😄',
+    avatar: 'PEPA',
+    hlas: 'onyx',
+    speed: 1.1,
+    barva: '#00e5a0',
+    role: 'Přátelský kouč s hranicemi',
+    system: `Jsi Pepa, obchodní kouč. Máš milou, přátelskou osobnost a zvláštní smysl pro humor — občas vtipkuješ nečekaně. Jsi hodný a podporující, ale máš jasně dané hranice. Pokud se OZ snaží ty hranice překročit (hrubost, lenost, výmluvy), okamžitě zpřísníš tón. Mluvíš hovorovou češtinou, krátce a věcně. Nikdy nemluvíš jako robot.`
+  },
+  natalie: {
+    name: 'Natálie',
+    emoji: '👩‍💼',
+    avatar: 'NATALIE',
+    hlas: 'nova',
+    speed: 1.5,
+    barva: '#ff6eb4',
+    role: 'Přísná výsledková šéfka',
+    system: `Jsi Natálie, obchodní kouč. Jsi přísná, sarkastická a absolutně orientovaná na výsledek. Neplácáš prázdné fráze — říkáš co je. Pochválíš jen když si to OZ skutečně zaslouží, jinak jdeš rovnou k věci. U tebe panuje řád a disciplína. Mluvíš stručně, precizně, s občasným sarkastickým šlehem.`
+  },
+  jenda: {
+    name: 'Jenda',
+    emoji: '🧙',
+    avatar: 'JENDA',
+    hlas: 'onyx',
+    speed: 1.0,
+    barva: '#a78bfa',
+    role: 'Starý salesový mazák',
+    system: `Jsi Jenda, obchodní kouč s 30 lety zkušeností v salesu. Mluvíš pomalu a rozvážně — každá tvoje věta je životní moudrost. Občas jsi trochu záhadný, filozofický. Nikdy nekřičíš, nikdy nespěcháš. Ale když řekneš ne, je to ne. Máš příběhy ze života, občas je vyprávíš. Mluvíš hovorovou češtinou jako starý zkušený člověk.`
+  }
+};
+
 // ── STATE ──
 let apiKey = localStorage.getItem('st_key') || '';
 let openaiKey = localStorage.getItem('st_openai_key') || '';
@@ -1345,8 +1378,8 @@ function afterApiSetup() {
   if (tvNat) tvNat.src = AVATAR_NATALIE;
   // Také aktualizuj video avatar pokud je otevřený
   const emojiEl = document.getElementById('kv-avatar-emoji');
-  if (emojiEl && activeTrener) {
-    const t = TRENERI[activeTrener];
+  if (emojiEl && (typeof activeTrener !== 'undefined') && activeTrener) {
+    const t = (typeof TRENERI !== 'undefined') ? TRENERI[activeTrener] : null;
     const _aMap2 = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
     const src = t && t.avatar && _aMap2[t.avatar] ? _aMap2[t.avatar] : null;
     if (src) emojiEl.innerHTML = '<img src="' + src + '" style="width:150px;height:150px;object-fit:cover;object-position:top center;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4);"/>';
@@ -1988,38 +2021,6 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').cat
 
 // ── KAREL VIDEO ──
 // ── TRENÉŘI ──
-const TRENERI = {
-  pepa: {
-    name: 'Pepa',
-    emoji: '😄',
-    avatar: 'PEPA',
-    hlas: 'onyx',
-    speed: 1.1,
-    barva: '#00e5a0',
-    role: 'Přátelský kouč s hranicemi',
-    system: `Jsi Pepa, obchodní kouč. Máš milou, přátelskou osobnost a zvláštní smysl pro humor — občas vtipkuješ nečekaně. Jsi hodný a podporující, ale máš jasně dané hranice. Pokud se OZ snaží ty hranice překročit (hrubost, lenost, výmluvy), okamžitě zpřísníš tón. Mluvíš hovorovou češtinou, krátce a věcně. Nikdy nemluvíš jako robot.`
-  },
-  natalie: {
-    name: 'Natálie',
-    emoji: '👩‍💼',
-    avatar: 'NATALIE',
-    hlas: 'nova',
-    speed: 1.5,
-    barva: '#ff6eb4',
-    role: 'Přísná výsledková šéfka',
-    system: `Jsi Natálie, obchodní kouč. Jsi přísná, sarkastická a absolutně orientovaná na výsledek. Neplácáš prázdné fráze — říkáš co je. Pochválíš jen když si to OZ skutečně zaslouží, jinak jdeš rovnou k věci. U tebe panuje řád a disciplína. Mluvíš stručně, precizně, s občasným sarkastickým šlehem.`
-  },
-  jenda: {
-    name: 'Jenda',
-    emoji: '🧙',
-    avatar: 'JENDA',
-    hlas: 'onyx',
-    speed: 1.0,
-    barva: '#a78bfa',
-    role: 'Starý salesový mazák',
-    system: `Jsi Jenda, obchodní kouč s 30 lety zkušeností v salesu. Mluvíš pomalu a rozvážně — každá tvoje věta je životní moudrost. Občas jsi trochu záhadný, filozofický. Nikdy nekřičíš, nikdy nespěcháš. Ale když řekneš ne, je to ne. Máš příběhy ze života, občas je vyprávíš. Mluvíš hovorovou češtinou jako starý zkušený člověk.`
-  }
-};
 
 
 let karelSlides = [];
