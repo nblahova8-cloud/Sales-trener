@@ -1347,7 +1347,8 @@ function afterApiSetup() {
   const emojiEl = document.getElementById('kv-avatar-emoji');
   if (emojiEl && activeTrener) {
     const t = TRENERI[activeTrener];
-    const src = t && t.avatar && AVATARS[t.avatar] ? AVATARS[t.avatar] : null;
+    const _aMap2 = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
+    const src = t && t.avatar && _aMap2[t.avatar] ? _aMap2[t.avatar] : null;
     if (src) emojiEl.innerHTML = '<img src="' + src + '" style="width:150px;height:150px;object-fit:cover;object-position:top center;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4);"/>';
   }
   // Diagnostika OpenAI klíče
@@ -2020,11 +2021,6 @@ const TRENERI = {
   }
 };
 
-const AVATARS = {
-  PEPA: AVATAR_PEPA,
-  NATALIE: AVATAR_NATALIE,
-  JENDA: AVATAR_JENDA
-};
 
 let karelSlides = [];
 let karelSlideIdx = 0;
@@ -2787,7 +2783,8 @@ function openKarelVideoWithTrener(lekceId) {
   if (titleEl) titleEl.textContent = t.name.toUpperCase() + ' • RYCHLOKURZ';
   const emojiEl = document.getElementById('kv-avatar-emoji');
   // Zobraz obrázek nebo emoji
-  const avatarSrc = t.avatar && AVATARS[t.avatar] ? AVATARS[t.avatar] : null;
+  const _avatarMap = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
+  const avatarSrc = t.avatar && _avatarMap[t.avatar] ? _avatarMap[t.avatar] : null;
   if (avatarSrc) {
     emojiEl.innerHTML = '<img src="' + avatarSrc + '" style="width:150px;height:150px;object-fit:cover;object-position:top center;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4);"/>';
   } else {
