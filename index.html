@@ -18,42 +18,45 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .screen.active{opacity:1;pointer-events:all;}
 
 /* ── AVATAR ANIMACE ── */
-@keyframes avatarIdle {
-  0%,100%{transform:translateY(0) rotate(0deg) scale(1);}
-  25%{transform:translateY(-4px) rotate(0.8deg) scale(1.01);}
-  50%{transform:translateY(-2px) rotate(-0.5deg) scale(1.005);}
-  75%{transform:translateY(-5px) rotate(0.3deg) scale(1.01);}
+@keyframes avatarBreath {
+  0%,100%{transform:translateY(0px) scale(1) rotate(0deg);}
+  30%{transform:translateY(-3px) scale(1.008) rotate(0.3deg);}
+  60%{transform:translateY(-1px) scale(1.004) rotate(-0.2deg);}
+  80%{transform:translateY(-4px) scale(1.006) rotate(0.4deg);}
 }
-@keyframes avatarTalk {
-  0%{transform:translateY(0) rotate(0deg) scale(1);}
-  10%{transform:translateY(-6px) rotate(1.2deg) scale(1.02);}
-  20%{transform:translateY(-2px) rotate(-0.8deg) scale(0.99);}
-  30%{transform:translateY(-8px) rotate(1.5deg) scale(1.03);}
-  40%{transform:translateY(-3px) rotate(-1deg) scale(1.01);}
-  50%{transform:translateY(-7px) rotate(0.9deg) scale(1.02);}
-  60%{transform:translateY(-1px) rotate(-1.2deg) scale(0.99);}
-  70%{transform:translateY(-9px) rotate(1.8deg) scale(1.03);}
-  80%{transform:translateY(-4px) rotate(-0.6deg) scale(1.01);}
-  90%{transform:translateY(-6px) rotate(1.1deg) scale(1.02);}
-  100%{transform:translateY(0) rotate(0deg) scale(1);}
+@keyframes avatarTalkBody {
+  0%{transform:translateY(0px) rotate(0deg) scale(1);}
+  8%{transform:translateY(-5px) rotate(1deg) scale(1.015);}
+  16%{transform:translateY(-1px) rotate(-0.7deg) scale(0.995);}
+  24%{transform:translateY(-7px) rotate(1.3deg) scale(1.02);}
+  32%{transform:translateY(-2px) rotate(-0.5deg) scale(1.005);}
+  40%{transform:translateY(-6px) rotate(0.8deg) scale(1.015);}
+  48%{transform:translateY(-1px) rotate(-1deg) scale(0.99);}
+  56%{transform:translateY(-8px) rotate(1.5deg) scale(1.02);}
+  64%{transform:translateY(-3px) rotate(-0.6deg) scale(1.005);}
+  72%{transform:translateY(-5px) rotate(1deg) scale(1.01);}
+  80%{transform:translateY(-2px) rotate(-0.8deg) scale(0.995);}
+  88%{transform:translateY(-6px) rotate(1.2deg) scale(1.015);}
+  96%{transform:translateY(-1px) rotate(-0.4deg) scale(1.005);}
+  100%{transform:translateY(0px) rotate(0deg) scale(1);}
 }
-@keyframes avatarTalkShake {
-  0%,100%{transform:translateX(0);}
-  15%{transform:translateX(-3px) rotate(-0.5deg);}
-  30%{transform:translateX(3px) rotate(0.5deg);}
-  45%{transform:translateX(-2px) rotate(-0.3deg);}
-  60%{transform:translateX(4px) rotate(0.8deg);}
-  75%{transform:translateX(-3px) rotate(-0.6deg);}
-  90%{transform:translateX(2px) rotate(0.3deg);}
+#kv-avatar {
+  background: transparent !important;
 }
 #kv-avatar img {
-  animation: avatarIdle 3.5s ease-in-out infinite;
+  animation: avatarBreath 4s ease-in-out infinite;
   transform-origin: bottom center;
-  transition: all 0.3s;
+  transition: filter 0.3s;
+  filter: drop-shadow(0 12px 30px rgba(0,0,0,0.5));
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: bottom center !important;
 }
 #kv-avatar img.talking {
-  animation: avatarTalk 0.6s ease-in-out infinite, avatarTalkShake 0.8s ease-in-out infinite;
+  animation: avatarTalkBody 0.55s ease-in-out infinite;
   transform-origin: bottom center;
+  filter: drop-shadow(0 16px 40px rgba(0,0,0,0.6));
 }
 
 /* ── DENNÍ TIP ── */
@@ -96,7 +99,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .tv-card{background:var(--card);border:2px solid var(--border);border-radius:1.4rem;padding:1.2rem 1.1rem;margin-bottom:0.9rem;cursor:pointer;transition:border-color 0.18s,transform 0.15s;display:flex;align-items:center;gap:1rem;}
 .tv-card:active{transform:scale(0.97);}
 .tv-card.selected{border-color:var(--gold);}
-.tv-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+.tv-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;background:transparent !important;}
 .tv-info{flex:1;}
 .tv-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text);}
 .tv-role{font-size:0.72rem;color:var(--gold);margin:0.1rem 0 0.3rem;}
@@ -465,6 +468,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div class="field-label" style="margin-top:1rem;">OpenAI API klíč <span style="color:#888;font-size:0.75rem;">(volitelné — pro hlas kouče)</span></div>
       <input type="password" class="field-input" id="openai-input" placeholder="sk-..." autocomplete="off"/>
       <div class="field-hint">Pro přirozený český hlas. Na <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> → API keys<br>~0.15 Kč za lekci</div>
+      <div style="margin-bottom:1rem;margin-top:0.5rem;">
+        <div class="field-label">Aktuální trenér</div>
+        <div style="background:#ffffff08;border:1px solid var(--border);border-radius:1rem;padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between;">
+          <div id="settings-trener-info" style="font-size:0.88rem;color:var(--text);">Pepa</div>
+          <button onclick="changeTrener()" style="background:#f5c84215;border:1px solid #f5c84240;border-radius:2rem;padding:0.35rem 0.8rem;color:var(--gold);font-size:0.73rem;font-family:'Syne',sans-serif;cursor:pointer;">Změnit</button>
+        </div>
+      </div>
       <button class="btn-gold" onclick="doSetup()">Pokračovat →</button>
       <button onclick="testOpenAIHlas()" style="background:none;border:1px solid #f5c84250;border-radius:2rem;padding:0.5rem 1rem;color:#f5c842;font-size:0.78rem;cursor:pointer;width:100%;margin-top:0.5rem;">🎙️ Test hlasu</button>
       <div id="openai-test-result" style="font-size:0.75rem;text-align:center;margin-top:0.4rem;display:none;"></div>
@@ -479,7 +489,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="tv-title">Vyber si trenéra 🎯</div>
     <div class="tv-sub">S kým chceš dnes trénovat?</div>
     <div class="tv-card" id="tv-pepa" onclick="selectTrener('pepa')">
-      <div class="tv-avatar" style="background:#1a3a2a;overflow:hidden;padding:0;"><img src="" id="tv-avatar-pepa" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">😄</span></div>
+      <div class="tv-avatar" style="background:transparent;overflow:hidden;padding:0;"><img src="" id="tv-avatar-pepa" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">😄</span></div>
       <div class="tv-info">
         <div class="tv-name">Pepa</div>
         <div class="tv-role">Přátelský kouč s hranicemi</div>
@@ -487,7 +497,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
     </div>
     <div class="tv-card" id="tv-natalie" onclick="selectTrener('natalie')">
-      <div class="tv-avatar" style="background:#3a1a2a;overflow:hidden;padding:0;"><img src="" id="tv-avatar-natalie" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">👩‍💼</span></div>
+      <div class="tv-avatar" style="background:transparent;overflow:hidden;padding:0;"><img src="" id="tv-avatar-natalie" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">👩‍💼</span></div>
       <div class="tv-info">
         <div class="tv-name">Natálie</div>
         <div class="tv-role">Přísná výsledková šéfka</div>
@@ -495,7 +505,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
     </div>
     <div class="tv-card" id="tv-jenda" onclick="selectTrener('jenda')">
-      <div class="tv-avatar" style="background:#1a2a3a;overflow:hidden;padding:0;"><img src="" id="tv-avatar-jenda" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">🧙</span></div>
+      <div class="tv-avatar" style="background:transparent;overflow:hidden;padding:0;"><img src="" id="tv-avatar-jenda" style="width:100%;height:100%;object-fit:cover;object-position:top center;border-radius:50%;" onerror="this.style.display='none';this.nextSibling.style.display='block';"/><span style="display:none;">🧙</span></div>
       <div class="tv-info">
         <div class="tv-name">Jenda</div>
         <div class="tv-role">Starý salesový mazák</div>
@@ -714,7 +724,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0.2rem 1.2rem 0;">
             <!-- Trenér avatar -->
       <div style="display:flex;justify-content:center;align-items:center;">
-      <div id="kv-avatar" style="width:150px;height:150px;display:flex;align-items:center;justify-content:center;font-size:7rem;filter:drop-shadow(0 8px 24px #f5c84230);position:relative;">
+      <div id="kv-avatar" style="width:220px;height:280px;display:flex;align-items:flex-end;justify-content:center;position:relative;background:transparent;">
         <span id="kv-avatar-emoji">😄</span>
         <!-- Mouth animation overlay (invisible, just for compat) -->
         <svg id="karel-svg" width="0" height="0" style="position:absolute;">
@@ -1349,7 +1359,26 @@ async function testOpenAIHlas() {
   }
 }
 
+function changeTrener() {
+  // Resetuj uloženého trenéra a zobraz výběr
+  localStorage.removeItem('st_trener');
+  activeTrener = 'pepa';
+  // Zobraz výběr trenéra bez lekce
+  ['pepa','natalie','jenda'].forEach(t => {
+    const el = document.getElementById('tv-' + t);
+    if (el) el.classList.toggle('selected', t === activeTrener);
+  });
+  window._pendingLekceId = null;
+  show('trener-vyber');
+}
+
 function openSettings() {
+  // Zobraz aktuálního trenéra
+  const ti = document.getElementById('settings-trener-info');
+  if (ti && typeof TRENERI !== 'undefined') {
+    const t = TRENERI[activeTrener] || TRENERI.pepa;
+    ti.textContent = t.emoji + ' ' + t.name;
+  }
   // Předvyplň existující klíče
   const apiInp = document.getElementById('api-input');
   const oaiInp = document.getElementById('openai-input');
@@ -1382,7 +1411,7 @@ function afterApiSetup() {
     const t = (typeof TRENERI !== 'undefined') ? TRENERI[activeTrener] : null;
     const _aMap2 = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
     const src = t && t.avatar && _aMap2[t.avatar] ? _aMap2[t.avatar] : null;
-    if (src) emojiEl.innerHTML = '<img src="' + src + '" style="width:150px;height:150px;object-fit:cover;object-position:top center;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4);"/>';
+    if (src) emojiEl.innerHTML = '<img src="' + src + '" style="width:100%;height:100%;object-fit:contain;object-position:bottom center;"/>';
   }
   // Diagnostika OpenAI klíče
   if (openaiKey && openaiKey.length > 10) {
@@ -2749,16 +2778,21 @@ async function playAngDialog(lines) {
 function showTrenerVyber(lekceId) {
   const script = getTrenerScript(lekceId);
   if (!script || script.length === 0) {
-    // Lekce bez videa — jdi rovnou na text
     openLekce(lekceId);
     return;
   }
-  // Označ aktuálního trenéra
+  // Pokud má OZ trenéra uloženého, přeskočit výběr
+  const savedTrener = localStorage.getItem('st_trener');
+  if (savedTrener && ['pepa','natalie','jenda'].includes(savedTrener)) {
+    activeTrener = savedTrener;
+    openKarelVideoWithTrener(lekceId);
+    return;
+  }
+  // Poprvé — zobraz výběr trenéra
   ['pepa','natalie','jenda'].forEach(t => {
     const el = document.getElementById('tv-' + t);
     if (el) el.classList.toggle('selected', t === activeTrener);
   });
-  // Ulož pending lekci
   window._pendingLekceId = lekceId;
   show('trener-vyber');
 }
@@ -2787,7 +2821,7 @@ function openKarelVideoWithTrener(lekceId) {
   const _avatarMap = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
   const avatarSrc = t.avatar && _avatarMap[t.avatar] ? _avatarMap[t.avatar] : null;
   if (avatarSrc) {
-    emojiEl.innerHTML = '<img src="' + avatarSrc + '" style="width:150px;height:150px;object-fit:cover;object-position:top center;border-radius:50%;box-shadow:0 8px 32px rgba(0,0,0,0.4);"/>';
+    emojiEl.innerHTML = '<img src="' + avatarSrc + '" style="width:100%;height:100%;object-fit:contain;object-position:bottom center;"/>';
   } else {
     emojiEl.innerHTML = '';
     emojiEl.textContent = t.emoji;
