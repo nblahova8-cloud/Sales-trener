@@ -725,8 +725,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0.2rem 1.2rem 0;">
             <!-- Trenér avatar -->
       <div style="display:flex;justify-content:center;align-items:center;">
-      <div id="kv-avatar" style="width:220px;height:280px;display:flex;align-items:flex-end;justify-content:center;position:relative;background:transparent;">
-        <span id="kv-avatar-emoji">😄</span>
+      <div id="kv-avatar" style="width:220px;height:320px;display:flex;align-items:flex-end;justify-content:center;position:relative;">
+        <img id="kv-avatar-img" src="" style="width:100%;height:100%;object-fit:contain;object-position:bottom center;display:none;"/>
+        <span id="kv-avatar-emoji" style="font-size:7rem;display:block;">😄</span>
         <!-- Mouth animation overlay (invisible, just for compat) -->
         <svg id="karel-svg" width="0" height="0" style="position:absolute;">
           <path id="karel-mouth-closed" d="" fill="none"/>
@@ -2852,14 +2853,16 @@ function openKarelVideoWithTrener(lekceId) {
   const titleEl = document.getElementById('kv-trener-title');
   if (titleEl) titleEl.textContent = t.name.toUpperCase() + ' • RYCHLOKURZ';
   const emojiEl = document.getElementById('kv-avatar-emoji');
-  // Zobraz obrázek nebo emoji
+  const avatarImg = document.getElementById('kv-avatar-img');
   const _avatarMap = {PEPA: typeof AVATAR_PEPA !== 'undefined' ? AVATAR_PEPA : null, NATALIE: typeof AVATAR_NATALIE !== 'undefined' ? AVATAR_NATALIE : null, JENDA: typeof AVATAR_JENDA !== 'undefined' ? AVATAR_JENDA : null};
   const avatarSrc = t.avatar && _avatarMap[t.avatar] ? _avatarMap[t.avatar] : null;
-  if (avatarSrc) {
-    emojiEl.innerHTML = '<img src="' + avatarSrc + '" style="width:100%;height:100%;object-fit:contain;object-position:bottom center;"/>';
+  if (avatarSrc && avatarImg) {
+    avatarImg.src = avatarSrc;
+    avatarImg.style.display = 'block';
+    if (emojiEl) emojiEl.style.display = 'none';
   } else {
-    emojiEl.innerHTML = '';
-    emojiEl.textContent = t.emoji;
+    if (avatarImg) avatarImg.style.display = 'none';
+    if (emojiEl) { emojiEl.style.display = 'block'; emojiEl.textContent = t.emoji; }
   }
   const prog = document.getElementById('kv-progress');
   if (prog) prog.style.background = t.barva;
