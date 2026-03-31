@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 // ── 🔑 OPENAI TTS KONFIGURACE ───────────────────────
 // URL tvého backend serveru (Vercel deployment)
 // Nahraď za svou URL po nasazení sales-trener-backend:
-const TTS_BACKEND_URL = "https://sales-trener-backend-ec73zxq2r-natalie-blahovas-projects.vercel.app";
+const TTS_BACKEND_URL = "https://sales-trener-backend.vercel.app";
 
 // Hlasy trenérů
 const TRAINER_VOICES = {
