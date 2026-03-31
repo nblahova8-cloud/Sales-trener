@@ -1,61 +1,48 @@
-
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// ── 🔑 OPENAI KONFIGURACE ────────────────────────────
-// Vlož svůj OpenAI API klíč sem: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
-// ⚠️  POZOR: OpenAI TTS API blokuje přímé volání z prohlížeče (CORS).
-// Pokud TTS nefunguje, použij backend/server.js nebo nechej prázdné
-// (automaticky se přepne na Web Speech API prohlížeče).
-const OPENAI_API_KEY = "sk-proj-ZDE_VLOZ_SVUJ_KLIC";
+// ── 🔑 OPENAI TTS KONFIGURACE ───────────────────────
+// URL tvého backend serveru (Vercel deployment)
+// Nahraď za svou URL po nasazení sales-trener-backend:
+const TTS_BACKEND_URL = "https://sales-trener-backend-ec73zxq2r-natalie-blahovas-projects.vercel.app";
 
-// Hlasy trenérů (OpenAI TTS)
+// Hlasy trenérů
 const TRAINER_VOICES = {
-  honza:   { voice: "onyx",  speed: 0.95 }, // hluboký, autoritativní
-  natalie: { voice: "nova",  speed: 1.0  }, // ostrý, sebejistý
-  pepa:    { voice: "alloy", speed: 1.05 }, // přátelský, teplý
+  honza:   { voice: "onyx",  speed: 0.95 },
+  natalie: { voice: "nova",  speed: 1.0  },
+  pepa:    { voice: "alloy", speed: 1.05 },
 };
 
-// Funkce pro přehrání OpenAI TTS
-// Pokud klíč chybí nebo selže → fallback na Web Speech API
 async function speakWithOpenAI(text, trainerId, onStart, onEnd) {
   const cfg = TRAINER_VOICES[trainerId] || { voice: "alloy", speed: 1.0 };
   onStart?.();
 
-  if (!OPENAI_API_KEY || OPENAI_API_KEY.includes("ZDE_VLOZ")) {
-    // Fallback — klíč není vyplněn
-    await speakWebSpeech(text, trainerId);
-    onEnd?.();
-    return;
+  const backendReady = TTS_BACKEND_URL && !TTS_BACKEND_URL.includes("ZDE_VLOZ");
+
+  if (backendReady) {
+    try {
+      const res = await fetch(`${TTS_BACKEND_URL}/api/tts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, voice: cfg.voice, speed: cfg.speed }),
+      });
+      if (!res.ok) throw new Error(`Backend TTS ${res.status}`);
+      const arrayBuffer = await res.arrayBuffer();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      await new Promise((resolve) => { source.onended = resolve; source.start(0); });
+      onEnd?.();
+      return;
+    } catch (err) {
+      console.warn("Backend TTS selhalo, fallback:", err.message);
+    }
   }
 
-  try {
-    const res = await fetch("https://api.openai.com/v1/audio/speech", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "tts-1",
-        input: text,
-        voice: cfg.voice,
-        speed: cfg.speed,
-      }),
-    });
-    if (!res.ok) throw new Error(`OpenAI TTS ${res.status}`);
-    const arrayBuffer = await res.arrayBuffer();
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    const source = audioCtx.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioCtx.destination);
-    await new Promise((resolve) => { source.onended = resolve; source.start(0); });
-  } catch (err) {
-    console.warn("OpenAI TTS selhalo, fallback:", err.message);
-    await speakWebSpeech(text, trainerId);
-  } finally {
-    onEnd?.();
-  }
+  // Fallback — Web Speech API
+  await speakWebSpeech(text, trainerId);
+  onEnd?.();
 }
 
 function speakWebSpeech(text, trainerId) {
